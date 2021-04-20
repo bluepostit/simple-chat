@@ -20,12 +20,13 @@ const buildMongoClient = async () => {
 class App {
   async tearDown() {
     await this.app.close()
+    await this.mongoClient.close()
   }
 
   async setup() {
-    const mongoClient = await buildMongoClient()
+    this.mongoClient = await buildMongoClient()
     this.app = fastify()
-    this.app.register(fastifyMongoDb, { client: mongoClient })
+    this.app.register(fastifyMongoDb, { client: this.mongoClient })
     return this
   }
 
