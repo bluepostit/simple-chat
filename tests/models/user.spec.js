@@ -4,13 +4,14 @@ const DB_NAME = process.env.DB_NAME
 describe('User', () => {
   let app
   let db
+
   beforeEach(async () => {
     app = await new App().setup()
     await app.fastify.ready()
     db = await app.fastify.mongo.client.db(DB_NAME)
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await db.collection('users').deleteMany({})
     await app.tearDown()
   })
