@@ -1,0 +1,16 @@
+{
+  "name": "chat-server",
+  "version": "1.0.0",
+  "description": "Simple chat server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "allegory99@protonmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^3.14.2",
+    "make-promises-safe": "^5.1.0"
+  }
+}
