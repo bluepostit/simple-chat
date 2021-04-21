@@ -28,5 +28,27 @@ describe('User', () => {
         console.error(err)
       }
     })
+
+    test('throws error if no password is given', async () => {
+      const createBadUser = async () => {
+        await User.insertOne({ email: 'test@example.com' })
+      }
+      expect(createBadUser).toThrow(/password/)
+    })
+
+    test('throws error if no password is too short', async () => {
+      const createBadUser = async () => {
+        await User.insertOne({ email: 'test@example.com' })
+      }
+      expect(createBadUser).toThrow(/password/)
+    })
+
+    test('throws error if a user with this email exists', async () => {
+      await User.insertOne({ })
+      const createBadUser = async () => {
+        await User.insertOne({ email: 'test@example.com' })
+      }
+      expect(createBadUser).toThrow(/password/)
+    })
   })
 })
