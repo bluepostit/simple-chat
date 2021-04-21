@@ -35,4 +35,22 @@ class App {
   }
 }
 
-module.exports = App
+class Db {
+  async tearDown() {
+    await this.mongoClient.close()
+  }
+
+  async setup() {
+    this.mongoClient = await buildMongoClient()
+    return this
+  }
+
+  getDb(name) {
+    return this.mongoClient.db(name)
+  }
+}
+
+module.exports = {
+  app: App,
+  db: Db
+}

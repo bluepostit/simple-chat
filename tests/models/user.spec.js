@@ -1,30 +1,27 @@
-const App = require('../app')
+const Db = require('../core').db
 const DB_NAME = process.env.DB_NAME
 
 describe('User', () => {
-  let app
-  let db
+  let dbHandler
+  let User
 
   beforeEach(async () => {
-    app = await new App().setup()
-    await app.fastify.ready()
-    db = await app.fastify.mongo.client.db(DB_NAME)
+    dbHandler = await new Db().setup()
+    User = await dbHandler.getDb(DB_NAME).collection('users')
   })
 
   afterEach(async () => {
-    await db.collection('users').deleteMany({})
-    await app.tearDown()
+    await User.deleteMany({})
+    await dbHandler.tearDown()
   })
 
   describe('creating a User', () => {
     test('creates a user with a password', async () => {
       try {
-        const users = await db.collection('users')
+        const firstCount = await User.find().count()
 
-        const firstCount = await users.find().count()
-
-        const user = await users.insertOne({ email: 'test@example.com', password: '123456' })
-        const newCount = await users.find().count()
+        const user = await User.insertOne({ email: 'test@example.com', password: '123456' })
+        const newCount = await User.find().count()
         expect(newCount).toBe(firstCount + 1)
 
       } catch (err) {
