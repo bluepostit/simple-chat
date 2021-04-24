@@ -1,7 +1,5 @@
-const path = require('path')
+require('../config/environment').load()
 const process = require('process')
-const ENV_FILE = path.resolve(process.cwd(), '.env.test')
-require('dotenv').config({ path: ENV_FILE })
 
 const fastify = require('fastify')
 const mongo = require('mongodb')

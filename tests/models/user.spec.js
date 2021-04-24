@@ -20,10 +20,9 @@ describe('User', () => {
       try {
         const firstCount = await User.find().count()
 
-        const user = await User.insertOne({ email: 'test@example.com', password: '123456' })
+        await User.insertOne({ email: 'test@example.com', password: '123456' })
         const newCount = await User.find().count()
         expect(newCount).toBe(firstCount + 1)
-
       } catch (err) {
         console.error(err)
       }
@@ -33,22 +32,22 @@ describe('User', () => {
       const createBadUser = async () => {
         await User.insertOne({ email: 'test@example.com' })
       }
-      expect(createBadUser).toThrow(/password/)
+      await expect(createBadUser).rejects.toThrow(/validation/)
     })
 
-    test('throws error if no password is too short', async () => {
+    test('throws error if password is too short', async () => {
       const createBadUser = async () => {
-        await User.insertOne({ email: 'test@example.com' })
+        await User.insertOne({ email: 'test@example.com', password: '12' })
       }
-      expect(createBadUser).toThrow(/password/)
+      await expect(createBadUser).rejects.toThrow(/validation/)
     })
 
     test('throws error if a user with this email exists', async () => {
-      await User.insertOne({ })
+      await User.insertOne({ email: 'test@example.com', password: '12345678' })
       const createBadUser = async () => {
-        await User.insertOne({ email: 'test@example.com' })
+        await User.insertOne({ email: 'test@example.com', password: '12345678' })
       }
-      expect(createBadUser).toThrow(/password/)
+      expect(createBadUser).rejects.toThrow(/email/)
     })
   })
 })
