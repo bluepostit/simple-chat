@@ -20,13 +20,34 @@ describe('User', () => {
       try {
         const firstCount = await User.find().count()
 
-        const user = await User.insertOne({ email: 'test@example.com', password: '123456' })
+        await User.insertOne({ email: 'test@example.com', password: '123456' })
         const newCount = await User.find().count()
         expect(newCount).toBe(firstCount + 1)
-
       } catch (err) {
         console.error(err)
       }
+    })
+
+    test('throws error if no password is given', async () => {
+      const createBadUser = async () => {
+        await User.insertOne({ email: 'test@example.com' })
+      }
+      await expect(createBadUser).rejects.toThrow(/validation/)
+    })
+
+    test('throws error if password is too short', async () => {
+      const createBadUser = async () => {
+        await User.insertOne({ email: 'test@example.com', password: '12' })
+      }
+      await expect(createBadUser).rejects.toThrow(/validation/)
+    })
+
+    test('throws error if a user with this email exists', async () => {
+      await User.insertOne({ email: 'test@example.com', password: '12345678' })
+      const createBadUser = async () => {
+        await User.insertOne({ email: 'test@example.com', password: '12345678' })
+      }
+      expect(createBadUser).rejects.toThrow(/email/)
     })
   })
 })
