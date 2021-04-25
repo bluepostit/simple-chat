@@ -13,8 +13,7 @@ module.exports = {
             email: {
               bsonType: 'string',
               description: 'must be a valid email address',
-              // pattern: '[\w+.]{2,}@(\w+\.\w+)+$'
-              pattern: '.*'
+              pattern: '\\w[\\w+.]+@(\\w+\\.\\w+)+$'
             },
             password: {
               bsonType: 'string',
