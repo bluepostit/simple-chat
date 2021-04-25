@@ -47,7 +47,7 @@ describe('User', () => {
       const createBadUser = async () => {
         await User.insertOne({ email: 'test@example.com', password: '12345678' })
       }
-      expect(createBadUser).rejects.toThrow(/email/)
+      await expect(createBadUser).rejects.toThrow(/email/)
     })
   })
 })
