@@ -1,5 +1,6 @@
 async function routes(fastify, options) {
-  fastify.get('/auth/register', async (request, reply) => {
+  fastify.post('/auth/register', async (request, reply) => {
+    console.log('hit the request')
     return { hello: 'world' }
   })
 }

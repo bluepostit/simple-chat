@@ -4,7 +4,7 @@
   "description": "Simple chat server",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node app/server.js",
     "test": "jest"
   },
   "author": "allegory99@protonmail.com",

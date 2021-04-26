@@ -25,6 +25,7 @@ class App {
     this.mongoClient = await buildMongoClient()
     this.app = fastify()
     this.app.register(fastifyMongoDb, { client: this.mongoClient })
+    this.app.register(require('../app/routes/auth.routes'))
     return this
   }
 
