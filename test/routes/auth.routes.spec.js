@@ -3,6 +3,7 @@ const App = require('../core').app
 describe('authentication', () => {
   let server
   let app
+  let User
 
   const REGISTRATION_PATH = '/auth/register'
   const TEST_EMAIL = 'test@example.com'
@@ -12,15 +13,16 @@ describe('authentication', () => {
     server = new App()
     await server.setup()
     app = server.fastify
+    User = await server.db.collection('users')
   })
 
   afterEach(async () => {
+    await server.clearData()
     await server.tearDown()
   })
 
   describe('registration', () => {
     test('creates a new user', async () => {
-      console.log(app.printRoutes())
       const res = await app.inject({
         method: 'POST',
         url: REGISTRATION_PATH,
@@ -31,6 +33,10 @@ describe('authentication', () => {
       })
       expect(res.statusCode).toBe(200)
       expect(res.body).toMatch(/success/i)
+
+      // Check that the user was created
+      const user = await User.findOne({ email: TEST_EMAIL })
+      expect(user).not.toBeNull()
     })
   })
 })
