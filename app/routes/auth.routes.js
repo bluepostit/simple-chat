@@ -54,7 +54,6 @@ async function routes(fastify, options) {
 
       const user = await User.findOne({ email })
       if (!user) {
-        request.log.info("can't find user. throwing error!")
         throw reply.unauthorized()
       }
 
