@@ -5,7 +5,9 @@ describe('authentication', () => {
   let app
   let User
 
-  const REGISTRATION_PATH = '/auth/register'
+  const AUTH_PATH = '/auth'
+  const REGISTRATION_SUFFIX = '/register'
+  const REGISTRATION_PATH = AUTH_PATH + REGISTRATION_SUFFIX
   const TEST_EMAIL = 'test@example.com'
   const TEST_PASSWORD = '123456'
 
@@ -21,8 +23,8 @@ describe('authentication', () => {
     await server.tearDown()
   })
 
-  describe('registration', () => {
-    test('creates a new user', async () => {
+  describe(AUTH_PATH, () => {
+    test(REGISTRATION_SUFFIX, async () => {
       const res = await app.inject({
         method: 'POST',
         url: REGISTRATION_PATH,
