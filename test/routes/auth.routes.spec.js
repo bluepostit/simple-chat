@@ -1,13 +1,14 @@
 const App = require('../core').app
 
-describe('authentication', () => {
+const AUTH_PATH = '/auth'
+const REGISTRATION_SUFFIX = '/register'
+const REGISTRATION_PATH = AUTH_PATH + REGISTRATION_SUFFIX
+
+describe(AUTH_PATH, () => {
   let server
   let app
   let User
 
-  const AUTH_PATH = '/auth'
-  const REGISTRATION_SUFFIX = '/register'
-  const REGISTRATION_PATH = AUTH_PATH + REGISTRATION_SUFFIX
   const TEST_EMAIL = 'test@example.com'
   const TEST_PASSWORD = '123456'
 
@@ -23,8 +24,8 @@ describe('authentication', () => {
     await server.tearDown()
   })
 
-  describe(AUTH_PATH, () => {
-    test(REGISTRATION_SUFFIX, async () => {
+  describe(REGISTRATION_SUFFIX, () => {
+    test('creates a new user', async () => {
       const res = await app.inject({
         method: 'POST',
         url: REGISTRATION_PATH,
