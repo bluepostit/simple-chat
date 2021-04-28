@@ -3,6 +3,8 @@ const App = require('../core').app
 const AUTH_PATH = '/auth'
 const REGISTRATION_SUFFIX = '/register'
 const REGISTRATION_PATH = AUTH_PATH + REGISTRATION_SUFFIX
+const LOGIN_SUFFIX = '/login'
+const LOGIN_PATH = AUTH_PATH + LOGIN_SUFFIX
 
 describe(AUTH_PATH, () => {
   let server
@@ -77,6 +79,35 @@ describe(AUTH_PATH, () => {
       })
       expect(res.statusCode).toBe(400)
       expect(res.body).toMatch(/password/i)
+    })
+  })
+
+  describe(LOGIN_SUFFIX, () => {
+    const register = async () => {
+      const res = await app.inject({
+        method: 'POST',
+        url: REGISTRATION_PATH,
+        payload: {
+          email: TEST_EMAIL,
+          password: TEST_PASSWORD
+        }
+      })
+      expect(res.statusCode).toBe(200)
+      expect(res.body).toMatch(/success/i)
+    }
+
+    test('successfully authenticates the user', async () => {
+      await register()
+      const res = await app.inject({
+        method: 'POST',
+        url: LOGIN_PATH,
+        payload: {
+          email: TEST_EMAIL,
+          password: TEST_PASSWORD
+        }
+      })
+      expect(res.statusCode).toBe(200)
+      expect(res.body).toMatch(/success/)
     })
   })
 })

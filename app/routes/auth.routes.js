@@ -1,24 +1,26 @@
 const Auth = require('../auth')
 const DB_NAME = process.env.DB_NAME
 
+const authSchema = {
+  body: {
+    type: 'object',
+    required: ['email', 'password'],
+    properties: {
+      email: {
+        type: 'string',
+        pattern: '\\w[\\w+.]+@(\\w+\\.\\w+)+$'
+      }
+    }
+  }
+}
+
 async function routes(fastify, options) {
   const db = await fastify.mongo.client.db(DB_NAME)
   const User = await db.collection('users')
 
   fastify.post('/auth/register',
     {
-      schema: {
-        body: {
-          type: 'object',
-          required: ['email', 'password'],
-          properties: {
-            email: {
-              type: 'string',
-              pattern: '\\w[\\w+.]+@(\\w+\\.\\w+)+$'
-            }
-          }
-        }
-      }
+      schema: authSchema
     },
     async (request, reply) => {
       const { email, password } = request.body
@@ -37,6 +39,29 @@ async function routes(fastify, options) {
         }
       }
       throw fastify.httpErrors.internalServerError()
+    }
+  )
+
+  fastify.post('/auth/login',
+    {
+      schema: authSchema
+    },
+    async (request, reply) => {
+      const { email, password } = request.body
+      if (!email || !password) {
+        throw fastify.httpErrors.badRequest(
+          'You must provide email and password'
+        )
+      }
+
+      const user = await User.findOne({ email })
+      const matchingPassword = await Auth.compare(password, user.password)
+      if (matchingPassword) {
+        return {
+          message: 'Login successful'
+        }
+      }
+      throw fastify.httpErrors.unauthorized()
     }
   )
 }
