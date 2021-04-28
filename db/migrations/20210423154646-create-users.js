@@ -18,7 +18,7 @@ module.exports = {
             password: {
               bsonType: 'string',
               minLength: 6,
-              maxLength: 24
+              maxLength: 256
             }
           }
         }

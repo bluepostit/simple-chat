@@ -1,3 +1,4 @@
+const Auth = require('../auth')
 const DB_NAME = process.env.DB_NAME
 
 async function routes(fastify, options) {
@@ -28,7 +29,8 @@ async function routes(fastify, options) {
       }
 
       // Create the user
-      const res = await User.insertOne({ email, password })
+      const hashedPassword = await Auth.hash(password)
+      const res = await User.insertOne({ email, password: hashedPassword })
       if (res.insertedCount === 1) {
         return {
           message: 'Registration successful'

@@ -38,5 +38,42 @@ describe('authentication', () => {
       const user = await User.findOne({ email: TEST_EMAIL })
       expect(user).not.toBeNull()
     })
+
+    test('hashes user email', async () => {
+      await app.inject({
+        method: 'POST',
+        url: REGISTRATION_PATH,
+        payload: {
+          email: TEST_EMAIL,
+          password: TEST_PASSWORD
+        }
+      })
+      const user = await User.findOne({ email: TEST_EMAIL })
+      expect(user.password).not.toBe(TEST_PASSWORD)
+    })
+
+    test('throws error when no email is given', async () => {
+      const res = await app.inject({
+        method: 'POST',
+        url: REGISTRATION_PATH,
+        payload: {
+          password: TEST_PASSWORD
+        }
+      })
+      expect(res.statusCode).toBe(400)
+      expect(res.body).toMatch(/email/i)
+    })
+
+    test('throws error when no password is given', async () => {
+      const res = await app.inject({
+        method: 'POST',
+        url: REGISTRATION_PATH,
+        payload: {
+          email: TEST_EMAIL
+        }
+      })
+      expect(res.statusCode).toBe(400)
+      expect(res.body).toMatch(/password/i)
+    })
   })
 })
