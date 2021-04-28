@@ -38,7 +38,7 @@ async function routes(fastify, options) {
           message: 'Registration successful'
         }
       }
-      throw fastify.httpErrors.internalServerError()
+      reply.internalServerError()
     }
   )
 
@@ -49,19 +49,22 @@ async function routes(fastify, options) {
     async (request, reply) => {
       const { email, password } = request.body
       if (!email || !password) {
-        throw fastify.httpErrors.badRequest(
-          'You must provide email and password'
-        )
+        throw reply.badRequest('You must provide email and password')
       }
 
       const user = await User.findOne({ email })
+      if (!user) {
+        request.log.info("can't find user. throwing error!")
+        throw reply.unauthorized()
+      }
+
       const matchingPassword = await Auth.compare(password, user.password)
       if (matchingPassword) {
         return {
           message: 'Login successful'
         }
       }
-      throw fastify.httpErrors.unauthorized()
+      throw reply.unauthorized()
     }
   )
 }

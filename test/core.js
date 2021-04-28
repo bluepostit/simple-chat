@@ -24,7 +24,13 @@ class App {
 
   async setup() {
     this.mongoClient = await buildMongoClient()
-    this.app = fastify()
+    this.app = fastify({
+      logger: {
+        level: 'info',
+        file: 'logs/test.log'
+      }
+    })
+    this.app.register(require('fastify-sensible'))
     this.app.register(fastifyMongoDb, { client: this.mongoClient })
     this.app.register(require('../app/routes/auth.routes'))
     this._db = await this.mongoClient.db(DB_NAME)

@@ -109,5 +109,33 @@ describe(AUTH_PATH, () => {
       expect(res.statusCode).toBe(200)
       expect(res.body).toMatch(/success/)
     })
+
+    test('fails on incorrect password', async () => {
+      await register()
+      const res = await app.inject({
+        method: 'POST',
+        url: LOGIN_PATH,
+        payload: {
+          email: TEST_EMAIL,
+          password: TEST_PASSWORD + 'a'
+        }
+      })
+      expect(res.statusCode).toBe(401)
+      expect(res.body).toMatch(/auth/i)
+    })
+
+    test('fails on incorrect email', async () => {
+      await User.insertOne({ email: TEST_EMAIL, password: TEST_PASSWORD })
+      const res = await app.inject({
+        method: 'POST',
+        url: LOGIN_PATH,
+        payload: {
+          email: TEST_EMAIL + 'a',
+          password: TEST_PASSWORD
+        }
+      })
+      expect(res.statusCode).toBe(401)
+      expect(res.body).toMatch(/auth/i)
+    })
   })
 })

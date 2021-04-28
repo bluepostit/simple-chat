@@ -5,6 +5,7 @@ const fastify = require('fastify')({
   logger: true
 })
 
+fastify.register(require('fastify-sensible'))
 fastify.register(require('./db/mongo'))
 fastify.register(require('./routes/auth.routes'))
 
