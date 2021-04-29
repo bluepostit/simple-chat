@@ -17,7 +17,8 @@
     "fastify-plugin": "^3.0.0",
     "fastify-sensible": "^3.1.1",
     "make-promises-safe": "^5.1.0",
-    "migrate-mongo": "^8.2.2"
+    "migrate-mongo": "^8.2.2",
+    "mongodb": "^3.6.6"
   },
   "devDependencies": {
     "jest": "^26.6.3"
